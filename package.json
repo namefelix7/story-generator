@@ -1,0 +1,8 @@
+{
+  "name": "story-generator",
+  "version": "1.0.0",
+  "description": "AI故事脚本生成器",
+  "scripts": {
+    "deploy": "git push origin main"
+  }
+}
