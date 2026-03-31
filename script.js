@@ -1,3 +1,44 @@
+// API Key 管理
+const apiKeySection = document.getElementById('apiKeySection');
+const apiKeyInput = document.getElementById('apiKeyInput');
+const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
+const resetApiBtn = document.getElementById('resetApiBtn');
+const storyForm = document.getElementById('storyForm');
+
+// 从本地存储读取 API Key
+function loadApiKey() {
+    const savedKey = localStorage.getItem('siliconflow_api_key');
+    if (savedKey) {
+        apiKeySection.style.display = 'none';
+        storyForm.style.display = 'block';
+        return savedKey;
+    }
+    return null;
+}
+
+// 保存 API Key
+saveApiKeyBtn.addEventListener('click', () => {
+    const key = apiKeyInput.value.trim();
+    if (!key) {
+        alert('请输入 API Key');
+        return;
+    }
+    localStorage.setItem('siliconflow_api_key', key);
+    apiKeySection.style.display = 'none';
+    storyForm.style.display = 'block';
+});
+
+// 重置 API Key
+resetApiBtn.addEventListener('click', () => {
+    localStorage.removeItem('siliconflow_api_key');
+    apiKeyInput.value = '';
+    apiKeySection.style.display = 'block';
+    storyForm.style.display = 'none';
+});
+
+// 初始化
+let currentApiKey = loadApiKey();
+
 // 精力滑块实时显示数值
 const energySlider = document.getElementById('energy');
 const energyValue = document.getElementById('energyValue');
@@ -36,22 +77,81 @@ form.addEventListener('submit', async (e) => {
     resultSection.style.display = 'none';
     
     try {
-        const response = await fetch('/api/generate', {
+        // 心境映射
+        const moodMap = {
+            calm: '平静安详',
+            anxious: '焦虑不安',
+            excited: '兴奋期待',
+            melancholy: '忧郁沉思',
+            hopeful: '充满希望',
+            confused: '迷茫困惑'
+        };
+        
+        // 故事类型映射
+        const genreMap = {
+            drama: '生活剧',
+            romance: '爱情故事',
+            adventure: '冒险旅程',
+            mystery: '悬疑推理',
+            fantasy: '奇幻故事',
+            scifi: '科幻故事',
+            comedy: '轻喜剧'
+        };
+        
+        // 构建 prompt
+        const systemPrompt = `你是一位专业的故事脚本作家，擅长根据人物信息创作引人入胜的故事脚本。
+请根据提供的人物信息和设定，创作一个完整的、有深度的故事脚本。
+脚本应该包括：开场、冲突/转折、高潮、结局。
+注意保持故事逻辑连贯，人物性格一致。
+直接输出故事内容，不要有多余的解释。`;
+        
+        const userPrompt = `请为以下人物创作一个故事脚本：
+
+【人物基本信息】
+- 姓名：${formData.name}
+- 年龄：${formData.age}
+- 职业：${formData.occupation}
+- 性格特点：${formData.personality}
+
+【当前状态】
+- 精力值：${formData.energy}%
+- 心境：${moodMap[formData.mood] || '普通'}
+- 当前处境：${formData.currentSituation}
+
+【故事设定】
+- 故事类型：${genreMap[formData.genre] || '生活剧'}
+${formData.additionalInfo ? `- 额外要求：${formData.additionalInfo}` : ''}
+
+请根据以上信息，创作一个精彩的故事脚本。`;
+        
+        // 调用硅基流动 API
+        const response = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentApiKey}`
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify({
+                model: 'deepseek-ai/DeepSeek-V3',
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: userPrompt }
+                ],
+                temperature: 0.8,
+                max_tokens: 2000
+            })
         });
         
         if (!response.ok) {
-            throw new Error('生成失败，请重试');
+            const errorData = await response.json();
+            throw new Error(errorData.error?.message || '生成失败，请检查 API Key 是否正确');
         }
         
         const data = await response.json();
+        const story = data.choices?.[0]?.message?.content || '生成失败，未获取到内容';
         
         // 显示结果
-        storyOutput.textContent = data.story;
+        storyOutput.textContent = story;
         resultSection.style.display = 'block';
         
         // 滚动到结果
@@ -60,7 +160,7 @@ form.addEventListener('submit', async (e) => {
         }, 100);
         
     } catch (error) {
-        alert(error.message || '生成失败，请检查网络连接');
+        alert(error.message || '生成失败，请重试');
     } finally {
         // 恢复按钮状态
         submitBtn.disabled = false;

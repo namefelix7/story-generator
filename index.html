@@ -18,7 +18,20 @@
             <p class="subtitle">填写人物信息，让 AI 为你编织独特的故事</p>
         </header>
 
-        <form id="storyForm" class="form">
+        <!-- API Key 输入 -->
+        <div class="api-key-section" id="apiKeySection">
+            <div class="api-key-box">
+                <h3>⚙️ 首次使用需要配置 API Key</h3>
+                <p>你的 API Key 只保存在浏览器本地，不会上传到服务器</p>
+                <div class="api-key-input-group">
+                    <input type="password" id="apiKeyInput" class="api-key-input" placeholder="输入你的硅基流动 API Key...">
+                    <button class="api-key-btn" id="saveApiKeyBtn">保存</button>
+                </div>
+                <p class="api-key-hint">没有 API Key？<a href="https://www.siliconflow.cn/" target="_blank">点这里获取</a></p>
+            </div>
+        </div>
+
+        <form id="storyForm" class="form" style="display: none;">
             <section class="form-section">
                 <h2 class="section-title">人物画像</h2>
                 
@@ -99,13 +112,16 @@
                 </div>
             </section>
 
-            <button type="submit" class="submit-btn" id="submitBtn">
-                <span class="btn-text">生成故事脚本</span>
-                <span class="btn-loading" style="display: none;">
-                    <span class="spinner"></span>
-                    创作中...
-                </span>
-            </button>
+            <div class="button-group">
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-text">生成故事脚本</span>
+                    <span class="btn-loading" style="display: none;">
+                        <span class="spinner"></span>
+                        创作中...
+                    </span>
+                </button>
+                <button type="button" class="reset-api-btn" id="resetApiBtn">更换 API Key</button>
+            </div>
         </form>
 
         <section class="result-section" id="resultSection" style="display: none;">

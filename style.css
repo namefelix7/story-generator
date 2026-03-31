@@ -100,6 +100,92 @@ body {
     margin-top: 1rem;
 }
 
+/* === API Key 配置 === */
+.api-key-section {
+    background: var(--bg-paper);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 
+        0 4px 20px var(--shadow),
+        0 0 0 1px var(--border);
+    margin-bottom: 2rem;
+    animation: slideUp 0.5s ease-out;
+}
+
+.api-key-box {
+    text-align: center;
+}
+
+.api-key-box h3 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+.api-key-box p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.api-key-input-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.api-key-input {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: var(--bg-section);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.api-key-input:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(139, 90, 60, 0.1);
+}
+
+.api-key-btn {
+    padding: 0.8rem 2rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--bg-paper);
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.api-key-btn:hover {
+    background: var(--accent-dark);
+    transform: translateY(-2px);
+}
+
+.api-key-hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.api-key-hint a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.api-key-hint a:hover {
+    text-decoration: underline;
+}
+
 /* === 表单 === */
 .form {
     background: var(--bg-paper);
@@ -199,6 +285,7 @@ body {
     background-repeat: no-repeat;
     background-position: right 0.8rem center;
     background-size: 1rem;
+    padding-right: 2.5rem;
 }
 
 /* === 精力滑块 === */
@@ -252,9 +339,15 @@ body {
     margin-top: 0.3rem;
 }
 
-/* === 提交按钮 === */
+/* === 按钮组 === */
+.button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
 .submit-btn {
-    width: 100%;
+    flex: 1;
     padding: 1.2rem 2rem;
     font-family: var(--font-body);
     font-size: 1.1rem;
@@ -297,6 +390,23 @@ body {
     opacity: 0.7;
     cursor: not-allowed;
     transform: none;
+}
+
+.reset-api-btn {
+    padding: 1.2rem 1.5rem;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--accent);
+    background: transparent;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.reset-api-btn:hover {
+    background: var(--accent);
+    color: var(--bg-paper);
 }
 
 .btn-loading {
@@ -409,5 +519,14 @@ body {
     
     .title {
         font-size: 2.2rem;
+    }
+    
+    .button-group {
+        flex-direction: column;
+    }
+    
+    .submit-btn,
+    .reset-api-btn {
+        width: 100%;
     }
 }
